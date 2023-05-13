@@ -1,20 +1,48 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import { AuthContext } from "../../Providers/AuthProvider";
 import Banner2 from "../../components/Banner2";
 
 const AppointmentRequests = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logoutUser } = useContext(AuthContext);
   const [appointmentRequests, setAppointmentRequests] = useState([]);
+  const token = localStorage.getItem("car-doctor-token");
 
   useEffect(() => {
-    if (user) {
-      fetch(`http://localhost:5001/api/appointments?email=${user.email}`)
+    if (user && token) {
+      fetch(`http://localhost:5001/api/appointments?email=${user.email}`, {
+        headers: {
+          authorization: token,
+        },
+      })
         .then((res) => res.json())
-        .then((data) => setAppointmentRequests(data))
+        .then((data) => {
+          if (data.error) logoutUser();
+          else setAppointmentRequests(data);
+        })
         .catch((err) => console.error(err));
     }
-  }, [user]);
+  }, [user, logoutUser, token]);
+
+  const handleDeleteAppointment = (id) => {
+    fetch(`http://localhost:5001/api/appointments/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          setAppointmentRequests((requests) =>
+            requests.filter((request) => request._id !== id)
+          );
+          Swal.fire({
+            icon: "success",
+            text: "Appointment request deleted successfully",
+          });
+        }
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="container mx-auto px-4 mt-4 mb-12">
@@ -35,7 +63,10 @@ const AppointmentRequests = () => {
         <tbody>
           {appointmentRequests.map((request) => (
             <tr key={request._id}>
-              <td className="p-2">
+              <td
+                onClick={() => handleDeleteAppointment(request._id)}
+                className="p-2"
+              >
                 <button className="btn btn-circle btn-sm">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

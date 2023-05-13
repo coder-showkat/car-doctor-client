@@ -3,6 +3,7 @@ import { useContext, useState } from "react";
 import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, Navigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 import { AuthContext } from "../Providers/AuthProvider";
 import img from "../assets/images/login/login.svg";
 import Loading from "../components/Loading";
@@ -21,7 +22,10 @@ const Login = () => {
     const password = form.password.value;
     const result = await loginUser(email, password);
     if (!result.success) setError(result.message);
-    alert(result.message);
+    Swal.fire({
+      icon: "success",
+      text: result.message,
+    });
     form.reset();
   };
 
