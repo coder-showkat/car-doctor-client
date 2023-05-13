@@ -2,14 +2,16 @@
 import { useContext, useState } from "react";
 import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 import img from "../assets/images/login/login.svg";
+import Loading from "../components/Loading";
 import Navbar from "../components/Navbar";
 
 const Login = () => {
-  const { user, login, loginUser } = useContext(AuthContext);
+  const { user, loading, loginUser } = useContext(AuthContext);
   const [error, setError] = useState(null);
+  const { state } = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,6 +24,12 @@ const Login = () => {
     alert(result.message);
     form.reset();
   };
+
+  if (loading) return <Loading />;
+  if (user)
+    return (
+      <Navigate to={state?.pathname ? state.pathname : "/"} replace={true} />
+    );
 
   return (
     <>
@@ -56,6 +64,7 @@ const Login = () => {
                   className="input input-bordered"
                 />
               </div>
+              {error && <p className="text-error text-center">{error}</p>}
               <button
                 type="submit"
                 className="btn btn-primary w-full mt-4 normal-case"

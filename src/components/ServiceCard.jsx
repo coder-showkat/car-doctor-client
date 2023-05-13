@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 import { HiArrowRight } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const ServiceCard = ({ service }) => {
-  const { title, img, price } = service;
+  const { _id, title, img, price } = service;
+
   return (
     <div className="card bg-base-100 border shadow">
       <figure className="px-6 pt-6">
@@ -16,9 +18,9 @@ const ServiceCard = ({ service }) => {
         <h2 className="card-title">{title}</h2>
         <div className="card-actions items-center text-primary font-semibold">
           <p>Price: ${price}</p>
-          <button className="text-xl">
+          <Link to={`/appointment/${_id}`} className="text-xl">
             <HiArrowRight />
-          </button>
+          </Link>
         </div>
       </div>
     </div>

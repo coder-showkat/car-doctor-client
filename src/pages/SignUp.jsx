@@ -2,9 +2,10 @@
 import { useContext, useState } from "react";
 import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 import img from "../assets/images/login/login.svg";
+import Loading from "../components/Loading";
 import Navbar from "../components/Navbar";
 
 const SignUp = () => {
@@ -33,7 +34,10 @@ const SignUp = () => {
       setError(error.message);
     }
   };
-  console.log(user);
+
+  if (loading) return <Loading />;
+  if (user) return <Navigate to="/" replace={true} />;
+
   return (
     <>
       <Navbar />
@@ -78,6 +82,7 @@ const SignUp = () => {
                   className="input input-bordered"
                 />
               </div>
+              {error && <p className="text-error text-center">{error}</p>}
               <button
                 type="submit"
                 className="btn btn-primary w-full mt-4 normal-case"

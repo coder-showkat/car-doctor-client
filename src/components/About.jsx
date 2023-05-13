@@ -4,7 +4,7 @@ import person from "../assets/images/about_us/person.jpg";
 const About = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 my-24">
-      <div className="order-2 md:order-1 relative mb-16">
+      <div className="order-2 md:order-1 relative mb-16 h-fit">
         <img
           src={person}
           alt=""
